@@ -1,8 +1,7 @@
-import os
+from datetime import datetime
 import zpl
 from zebra import Zebra
 import win32print
-from datetime import datetime
 
 z = Zebra()
 #print('Printer queues found:',z.getqueues())
@@ -52,7 +51,6 @@ tube_extensions = {
     '724': 'Macro não enzimática',
     '725': 'Macro enzimática',
     '726': 'HDL 2/3',
-
 }
 
 HEADER_HEIGHT = 10
@@ -76,7 +74,14 @@ def generate_barcode(data):
 
     # Generate the barcode
     label.origin(4, 4)
-    label.barcode('C', data, height=CODE_HEIGHT, check_digit='Y', orientation='N', mode='A', print_interpretation_line='N')
+    label.barcode(
+        'C', data, 
+        height=CODE_HEIGHT, 
+        check_digit='Y', 
+        orientation='N', 
+        mode='A', 
+        print_interpretation_line='N'
+        )
     label.endorigin()
 
     extension = data[len(data)-3:]
@@ -90,7 +95,13 @@ def generate_barcode(data):
         label.endorigin()
 
         label.origin(2, 23)
-        label.write_text(tube_extensions[extension], char_height=2, char_width=2, line_width=44, justification='L')
+        label.write_text(
+            tube_extensions[extension], 
+            char_height=2, 
+            char_width=2, 
+            line_width=44, 
+            justification='L'
+            )
         label.endorigin()
     
     else:
@@ -99,10 +110,8 @@ def generate_barcode(data):
         label.endorigin()
     
     #label.preview()
-
     #print(label.dumpZPL())
     return label.dumpZPL()
-
 
 def list_printers():
     # Enumerate printers and return a list of printer names
@@ -132,7 +141,8 @@ def print_barcode(barcode):
 if __name__ == "__main__":
     user_input = input("Enter data for barcode: ")
 
-    barcode = generate_barcode(user_input)
-    printer_name = select_printer()
+    bc = generate_barcode(user_input)
+    select_printer()
 
-    print_barcode(barcode)
+    print_barcode(bc)
+    
