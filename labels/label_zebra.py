@@ -119,6 +119,7 @@ class ZebraBarcodePrinter():
         self.label.endorigin()
 
         self.extension = ''
+        extension_found = False
         for extension in self.sorted_extensions_keys:
             if data.endswith(extension):
                 self.extension = extension

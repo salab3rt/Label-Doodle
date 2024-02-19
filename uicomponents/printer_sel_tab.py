@@ -21,7 +21,7 @@ class PrinterSelectTab(QWidget):
         self.printer_list.itemSelectionChanged.connect(self.on_selection_changed)
         self.get_printers_names()
         
-        self.footer = QLabel('Made by salab3rt')
+        self.footer = QLabel('salab3rt')
         font = QFont("Montserrat", 9, 500)
         self.footer.setFont(font)
         self.layout.addWidget(self.footer)

@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import QVBoxLayout, QWidget, QLabel, QListWidget
 from PyQt6.QtGui import QFont
 from PyQt6 import QtCore
-import win32print
 
 class HistorySelectTab(QWidget):
     def __init__(self):

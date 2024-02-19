@@ -1,13 +1,23 @@
-import sys
-import keyboard
-import time
-from PyQt6.QtWidgets import QApplication, QMainWindow, QSystemTrayIcon, QMenu, QWidget, QVBoxLayout, QTabWidget, QSizePolicy
-from PyQt6.QtGui import QIcon, QAction, QFont, QFontDatabase, QGuiApplication
-from PyQt6.QtCore import Qt, QPoint, QTimer, QEvent
+import sys, win32gui
+from PyQt6.QtWidgets import QApplication, QMainWindow, QSystemTrayIcon, QMenu, QWidget, QVBoxLayout, QTabWidget
+from PyQt6.QtGui import QIcon, QAction, QFont
+from PyQt6.QtCore import Qt, QTimer, QEvent
 from labels import label_zebra
 from uicomponents.topbar import *
-from uicomponents import bc_print_tab, printer_sel_tab, keyboard_hotkeys, bc_history, bc_presets_tab
+from uicomponents import bc_print_tab, printer_sel_tab, keyboard_hotkeys, bc_history, bc_presets_tab, resources
+import qdarktheme
 
+
+def windowEnumerationHandler(hwnd, top_windows):
+    top_windows.append((hwnd, win32gui.GetWindowText(hwnd)))
+
+top_windows = []
+win32gui.EnumWindows(windowEnumerationHandler, top_windows)
+for i in top_windows:
+    if "Label Doodle" in i[1]:
+        sys.exit()
+
+icon_path = resources.resource_path("icon.ico")
 
 class LabelApp(QMainWindow):
     def __init__(self):
@@ -82,11 +92,13 @@ class LabelApp(QMainWindow):
         
         extension_found = False
         for extension in sorted_extensions:
-            if data.endswith(extension):
+            if data.endswith(extension, len(data) - len(extension)):
                 extension_found = True
-                data = data[:-len(extension)]
+                #data = data[:-len(extension)]
+                break
+
         if extension_found:
-            data += selected_value
+            data = data[:-len(extension)] + selected_value
         else:
             data += selected_value
                 
@@ -99,8 +111,10 @@ class LabelApp(QMainWindow):
         
         self.main_window.setWindowTitle("Label Doodle")
         
-        self.tray_icon = QSystemTrayIcon(QIcon("icon.ico"), self)
-        self.tray_icon.setToolTip("Barcode Printer")
+        
+        self.setWindowIcon(QIcon(icon_path))
+        self.tray_icon = QSystemTrayIcon(QIcon(icon_path), self)
+        self.tray_icon.setToolTip("Label Doodle")
         
         self.central_widget = QWidget()
         #self.setCentralWidget(self.central_widget)
@@ -175,7 +189,7 @@ class LabelApp(QMainWindow):
         x = screen_rect.width() - 400
         y = (screen_rect.height() - 200) / 2
         
-        self.main_window.setGeometry(x, int(y), 400, 400)
+        self.main_window.setGeometry(x, int(y), 400, 450)
         self.main_window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         
         x = screen_rect.width() - window_rect.width()
@@ -211,14 +225,12 @@ class LabelApp(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setApplicationName("Label Doodle")
+    app.setPalette(qdarktheme.load_palette("dark"))
     app.setStyle("Fusion")
-    #font_id = QFontDatabase.addApplicationFont("uicomponents/fonts/Montserrat-Regular.ttf")
-    #family = QFontDatabase.applicationFontFamilies(font_id)[0]
-    #font = QFont("Segoe UI Variable Display", 13)
     font = QFont("Montserrat", 13, weight=500)
     app.setFont(font)
     app.setQuitOnLastWindowClosed(False)
-    app.setWindowIcon(QIcon("icon.ico"))
+    app.setWindowIcon(QIcon(icon_path))
     
     #font_families = QFontDatabase.families()
     #print(font_families)

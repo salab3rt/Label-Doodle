@@ -29,7 +29,7 @@ class PresetBCPrintTab(QWidget):
         self.data_entry.setFont(QFont("Montserrat", 26))
         self.data_entry.setMaxLength(20)
         self.data_entry.setStyleSheet("QLineEdit {padding: 5px; letter-spacing: 4px;}")
-        self.data_entry.textChanged.connect(self.on_text_changed)
+        #self.data_entry.textChanged.connect(self.on_text_changed)
         self.layout.addWidget(self.data_entry)
         
         button_grid_widget = QWidget()
@@ -128,9 +128,8 @@ class PresetBCPrintTab(QWidget):
         self.data_entry.setFocus()
         
     def on_return_pressed(self):
-        # Call the same method as clicking the button
-        self.on_print_button_click()
+        self.data_entry.selectAll()
+        self.data_entry.setFocus()
 
     def on_text_changed(self, text):
-        # Set the text to uppercase
         self.data_entry.setText(text.upper())

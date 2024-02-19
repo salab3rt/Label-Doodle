@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout
-from PyQt6.QtGui import QColor, QIcon, QFont, QPixmap
-
+from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout
+from PyQt6.QtGui import QPixmap
+from .resources import resource_path
 from PyQt6 import QtCore
 
 class ClickableLabel(QLabel):
@@ -29,7 +29,9 @@ class TopTitleBar(QWidget):
         
         self.title_label = QLabel("Label Doodle")
         
-        self.icon = QPixmap("icon.ico")
+        icon_path = resource_path("icon.ico")
+
+        self.icon = QPixmap(icon_path)
         self.icon = self.icon.scaled(35, 35, QtCore.Qt.AspectRatioMode.KeepAspectRatio)
         self.title_icon = QLabel("")
         self.title_icon.setPixmap(self.icon)
@@ -40,7 +42,8 @@ class TopTitleBar(QWidget):
 
         self.layout.addStretch()
         
-        self.close_icon = QPixmap("uicomponents/png/close.png")
+        close_button_icon_path = resource_path("uicomponents/png/close.png")
+        self.close_icon = QPixmap(close_button_icon_path)
         self.close_icon = self.close_icon.scaled(25, 25, QtCore.Qt.AspectRatioMode.IgnoreAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation)
         self.close_label = ClickableLabel("")
         self.close_label.setPixmap(self.close_icon)
@@ -58,13 +61,10 @@ class TopTitleBar(QWidget):
         if obj == self.close_label:
             #print(event)
             if event.type() == QtCore.QEvent.Type.Enter:
-                # Change the icon pixmap to the highlighted version
                 highlighted_icon = self.close_icon
-                # Example: You can create a highlighted version of the icon by adjusting its brightness or saturation
                 highlighted_icon = highlighted_icon.scaled(26, 26, QtCore.Qt.AspectRatioMode.IgnoreAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation)
                 self.close_label.setPixmap(highlighted_icon)
             elif event.type() == QtCore.QEvent.Type.Leave:
-                # Restore the original icon pixmap
                 self.close_label.setPixmap(self.close_icon)
             elif event.type() == QtCore.QEvent.Type.MouseButtonPress:
                 self.close_label.setPixmap(self.close_icon)

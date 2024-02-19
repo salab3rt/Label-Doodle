@@ -2,3 +2,4 @@ zpl
 zebra
 pystray
 PyQt6
+pyqtdarktheme
