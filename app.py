@@ -73,7 +73,7 @@ def generate_barcode(data):
     label.endorigin()
 
     # Generate the barcode
-    label.origin(4, 4)
+    label.origin(4, 3.5)
     label.barcode(
         'C', data, 
         height=CODE_HEIGHT, 
@@ -83,18 +83,36 @@ def generate_barcode(data):
         print_interpretation_line='N'
         )
     label.endorigin()
+    
+    label.origin(0, 17)
+    label.write_text(
+        '^GB400,3,2', 
+    )
+    label.endorigin()
 
     extension = data[len(data)-3:]
     if extension in tube_extensions.keys():
         label.origin(4, 18)
-        label.write_text(data[:-3], char_height=5, char_width=5, line_width=55, justification='L')
+        label.write_text(
+            data[:-3], 
+            char_height=5, 
+            char_width=5, 
+            line_width=55, 
+            justification='L'
+        )
         label.endorigin()
 
         label.origin(4, 18)
-        label.write_text(extension, char_height=3, char_width=3, line_width=44, justification='R')
+        label.write_text(
+            extension, 
+            char_height=3, 
+            char_width=3, 
+            line_width=44, 
+            justification='R',
+        )
         label.endorigin()
 
-        label.origin(2, 23)
+        label.origin(2, 22.5)
         label.write_text(
             tube_extensions[extension], 
             char_height=2, 
@@ -109,8 +127,8 @@ def generate_barcode(data):
         label.write_text(data, char_height=5, char_width=5, line_width=55, justification='L')
         label.endorigin()
     
-    #label.preview()
-    #print(label.dumpZPL())
+    label.preview()
+    print(label.dumpZPL())
     return label.dumpZPL()
 
 def list_printers():
