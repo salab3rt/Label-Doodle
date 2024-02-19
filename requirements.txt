@@ -1,3 +1,4 @@
 zpl
 zebra
 pystray
+PyQt6

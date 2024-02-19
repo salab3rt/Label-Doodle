@@ -60,32 +60,32 @@ class PresetBCPrintTab(QWidget):
             # Add more buttons as needed
         ]
         buttons_data = [
-            {"text": "D2", "color": "#465347"},
-            {"text": "D3", "color": "#465347"},
+            {"text": "D2", "color": "#56855a"},
+            {"text": "D3", "color": "#56855a"},
             {"text": "721", "color": "#486684"},
             {"text": "027", "color": "#4c4852"},
-            {"text": "D4", "color": "#465347"},
-            {"text": "D5", "color": "#465347"},
+            {"text": "D4", "color": "#56855a"},
+            {"text": "D5", "color": "#56855a"},
             {"text": "722", "color": "#486684"},
-            {"text": "151", "color": "#5a3326"},
-            {"text": "D10", "color": "#465347"},
-            {"text": "D20", "color": "#465347"},
+            {"text": "151", "color": "#a35339"},
+            {"text": "D10", "color": "#56855a"},
+            {"text": "D20", "color": "#56855a"},
             {"text": "723", "color": "#486684"},
-            {"text": "203", "color": "#750a0a"},
-            {"text": "D50", "color": "#465347"},
-            {"text": "D100", "color": "#465347"},
+            {"text": "203", "color": "#c23232"},
+            {"text": "D50", "color": "#56855a"},
+            {"text": "D100", "color": "#56855a"},
             {"text": "724", "color": "#486684"},
-            {"text": "204", "color": "#750a0a"},
-            {"text": "D1000", "color": "#465347"},
-            None,
+            {"text": "204", "color": "#c23232"},
+            {"text": "D1000", "color": "#56855a"},
+            {"text": "003", "color": "#f2692e"},
             {"text": "725", "color": "#486684"},
-            {"text": "726", "color": "#264034"},
+            {"text": "726", "color": "#23b06f"},
         ]
 
         for i, data in enumerate(buttons_data):
             if data is not None:
                 button = QPushButton(data["text"])
-                button.setStyleSheet(f"background-color: {data['color']};")
+                button.setStyleSheet(f"background-color: {data['color']}; color:'white';")
                 grid_layout.addWidget(button, i // 4, i % 4)  # Add buttons in a 2-column grid
                 button.button_name = data["text"]
                 button.clicked.connect(lambda checked, index=i: self.on_button_clicked(index))

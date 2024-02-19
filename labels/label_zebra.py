@@ -66,6 +66,8 @@ class ZebraBarcodePrinter():
             'D1000': 'Diluição 1/1000',
         }
     
+    sorted_extensions_keys = sorted(tube_extensions.keys(), key=len, reverse=True)
+    
     def __init__(self):
         super().__init__()
         
@@ -116,11 +118,21 @@ class ZebraBarcodePrinter():
         )
         self.label.endorigin()
 
-        extension = data[len(data)-3:]
-        if extension in self.tube_extensions.keys():
+        self.extension = ''
+        for extension in self.sorted_extensions_keys:
+            if data.endswith(extension):
+                self.extension = extension
+                extension_found = True
+                data = data[:-len(extension)]
+                break
+
+        if extension_found:
+            data += self.extension
+        #extension = data[len(data)-3:]
+        #if extension in self.tube_extensions.keys():
             self.label.origin(4, 18)
             self.label.write_text(
-                data[:-3], 
+                data[:-len(extension)], 
                 char_height=5, 
                 char_width=5, 
                 line_width=55, 

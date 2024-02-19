@@ -17,7 +17,7 @@ class HotkeyManager(QObject):
         current_time = time.time()
         if not self.ctrl_pressed:
             self.ctrl_pressed = True
-            if current_time - self.last_ctrl_press_time < 0.5:
+            if current_time - self.last_ctrl_press_time < 0.3:
                 self.ctrl_pressed_count += 1
                 if self.ctrl_pressed_count == 2:
                     self.ctrlPressedTwice.emit()
