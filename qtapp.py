@@ -33,6 +33,7 @@ class LabelApp(QMainWindow):
         self.printer_select_tab.selected_printer_signal.connect(self.get_printer_name)
         self.preset_bc_tab.print_signal.connect(self.preset_print_and_add_to_history_list)
         self.preset_bc_tab.option_signal.connect(self.replace_extension)
+        self.preset_bc_tab.conf_signal.connect(self.print_conf)
 
             
         self.quick_print_tab.data_entry.setFocus()
@@ -66,6 +67,15 @@ class LabelApp(QMainWindow):
         
         #print(self.selected_printer)
     
+    def print_conf(self):
+        data = self.preset_bc_tab.data_entry.text()
+        if data:
+            for i in range(11, 15, 1):  #exclusive 11-14
+                conf_data = str(i) + data
+                barcode = self.zebra_barcode_printer.generate_barcode(conf_data, prefix=True)
+                self.zebra_barcode_printer.print_barcode(barcode)
+                self.history_list_tab.add_to_history(conf_data)
+
     def print_and_add_to_history_list(self):
         data = self.quick_print_tab.data_entry.text()
         if data:

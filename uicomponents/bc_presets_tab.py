@@ -5,6 +5,8 @@ from PyQt6.QtCore import Qt, pyqtSignal
 class PresetBCPrintTab(QWidget):
     print_signal = pyqtSignal()
     option_signal = pyqtSignal()
+    conf_signal = pyqtSignal()
+
     printer_name = None
     option_value = None
     
@@ -76,7 +78,7 @@ class PresetBCPrintTab(QWidget):
             {"text": "D100", "color": "#56855a"},
             {"text": "724", "color": "#486684"},
             {"text": "204", "color": "#c23232"},
-            {"text": "D1000", "color": "#56855a"},
+            {"text": "CONF", "color": "#a32e7e"},
             {"text": "003", "color": "#f2692e"},
             {"text": "725", "color": "#486684"},
             {"text": "726", "color": "#23b06f"},
@@ -113,10 +115,13 @@ class PresetBCPrintTab(QWidget):
     
     def on_button_clicked(self, index):
         button = self.sender().button_name
-        self.option_value = button
-        
-        self.option_signal.emit()
-        
+        if button == 'CONF':
+            self.conf_signal.emit()
+        else:
+            self.option_value = button
+            
+            self.option_signal.emit()
+            
         self.data_entry.selectAll()
         self.data_entry.setFocus()
         

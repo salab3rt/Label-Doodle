@@ -10,6 +10,13 @@ class ZebraBarcodePrinter():
     _CODE_CHAR_SIZE = 5
     _EXTENSION_CHAR_SIZE = 3
     
+    tube_prefixes = {
+            '11':'CTRL ++ CTRL',
+            '12':'CTRL ++ CONF',
+            '13':'AMOSTRA ++ CTRL',
+            '14':'AMOSTRA ++ CONF'
+        }
+
     tube_extensions = {
             '000': 'Soro',
             '003': 'Tratamento Eurosorb',
@@ -58,12 +65,20 @@ class ZebraBarcodePrinter():
             'D3': 'Diluição 1/3',
             'D4': 'Diluição 1/4',
             'D5': 'Diluição 1/5',
+            'D8': 'Diluição 1/8',
             'D10': 'Diluição 1/10',
+            'D16': 'Diluição 1/16',
             'D20': 'Diluição 1/20',
+            'D32': 'Diluição 1/32',
             #'D50': 'Diluiç_c3_a3o 1/50',
             'D50': 'Diluição 1/50',
+            'D64': 'Diluição 1/64',
             'D100': 'Diluição 1/100',
+            'D128': 'Diluição 1/128',
+            'D256': 'Diluição 1/256',
+            'D512': 'Diluição 1/512',
             'D1000': 'Diluição 1/1000',
+            'D1024': 'Diluição 1/1024',
         }
     
     sorted_extensions_keys = sorted(tube_extensions.keys(), key=len, reverse=True)
@@ -73,8 +88,10 @@ class ZebraBarcodePrinter():
         
         self.z = Zebra()
 
-    def generate_barcode(self, data):
+    def generate_barcode(self, data, prefix=False):
         
+        #print(data)
+
         self.label = zpl.Label(25,50,8)
         
         self.label.change_international_font(character_set=28)
@@ -127,7 +144,7 @@ class ZebraBarcodePrinter():
                 data = data[:-len(extension)]
                 break
 
-        if extension_found:
+        if extension_found and not prefix:
             data += self.extension
         #extension = data[len(data)-3:]
         #if extension in self.tube_extensions.keys():
@@ -172,6 +189,17 @@ class ZebraBarcodePrinter():
             )
             self.label.endorigin()
 
+            if prefix:
+                self.label.origin(2, 22.5)
+                self.label.write_text(
+                    self.tube_prefixes[data[:2]], 
+                    char_height=2, 
+                    char_width=2, 
+                    line_width=44, 
+                    justification='L'
+                    )
+                self.label.endorigin()
+
         #self.label.preview()
         #print(self.label.dumpZPL())
         return self.label.dumpZPL()
@@ -181,10 +209,12 @@ class ZebraBarcodePrinter():
         self.z.setqueue(printer)
 
     def print_barcode(self, barcode):
+        #print(barcode)
         try:
-            barcode = barcode.encode('UTF-8')
+            #barcode = barcode.encode('UTF-8')
+            #barcode = barcode.encode('UTF-8')
             self.z.output(barcode,
-                          #commands='cp1252'
+                          encoding='UTF-8'
                           )
             #print(f"Print in {self.z.queue}")
         except Exception as e:
