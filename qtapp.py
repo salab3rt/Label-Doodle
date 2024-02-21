@@ -14,7 +14,7 @@ def windowEnumerationHandler(hwnd, top_windows):
 top_windows = []
 win32gui.EnumWindows(windowEnumerationHandler, top_windows)
 for i in top_windows:
-    if "LabelDoodle" in i[1]:
+    if "Label Doodle" in i[1]:
         sys.exit()
 
 icon_path = resources.resource_path("icon.ico")
