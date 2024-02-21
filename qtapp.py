@@ -14,7 +14,7 @@ def windowEnumerationHandler(hwnd, top_windows):
 top_windows = []
 win32gui.EnumWindows(windowEnumerationHandler, top_windows)
 for i in top_windows:
-    if "Label Doodle" in i[1]:
+    if "LabelDoodle" in i[1]:
         sys.exit()
 
 icon_path = resources.resource_path("icon.ico")
@@ -34,6 +34,7 @@ class LabelApp(QMainWindow):
         self.preset_bc_tab.print_signal.connect(self.preset_print_and_add_to_history_list)
         self.preset_bc_tab.option_signal.connect(self.replace_extension)
         self.preset_bc_tab.conf_signal.connect(self.print_conf)
+        self.preset_bc_tab.ortho_btn_signal.connect(self.print_ortho)
 
             
         self.quick_print_tab.data_entry.setFocus()
@@ -76,6 +77,16 @@ class LabelApp(QMainWindow):
                 self.zebra_barcode_printer.print_barcode(barcode)
                 self.history_list_tab.add_to_history(conf_data)
 
+    def print_ortho(self):
+        data = self.preset_bc_tab.data_entry.text()
+        if data:
+            for ext in self.preset_bc_tab.option_value:
+                barcode = self.check_and_replace_extension(data, ext)
+                barcode = self.zebra_barcode_printer.generate_barcode(barcode)
+                self.zebra_barcode_printer.print_barcode(barcode)
+
+            self.history_list_tab.add_to_history(data)
+
     def print_and_add_to_history_list(self):
         data = self.quick_print_tab.data_entry.text()
         if data:
@@ -85,7 +96,6 @@ class LabelApp(QMainWindow):
             
     def preset_print_and_add_to_history_list(self):
         data = self.preset_bc_tab.data_entry.text()
-            
         if data:
             self.preset_bc_tab.data_entry.setText(data)
             
@@ -98,6 +108,12 @@ class LabelApp(QMainWindow):
         data = self.preset_bc_tab.data_entry.text()
         #print(f'Data: {data}')
         selected_value = self.preset_bc_tab.option_value
+        data = self.check_and_replace_extension(data, selected_value)
+                
+        #print(f'altered:{data}')
+        self.preset_bc_tab.data_entry.setText(data)
+        
+    def check_and_replace_extension(self, data, selected_value):
         sorted_extensions = sorted(self.zebra_barcode_printer.tube_extensions.keys(), key=len, reverse=True)
         
         extension_found = False
@@ -106,15 +122,13 @@ class LabelApp(QMainWindow):
                 extension_found = True
                 #data = data[:-len(extension)]
                 break
-
         if extension_found:
             data = data[:-len(extension)] + selected_value
         else:
             data += selected_value
-                
-        #print(f'altered:{data}')
-        self.preset_bc_tab.data_entry.setText(data)
         
+        return data
+
     def init_ui(self):
         
         self.main_window = QMainWindow()
@@ -199,7 +213,7 @@ class LabelApp(QMainWindow):
         x = screen_rect.width() - 400
         y = (screen_rect.height() - 200) / 2
         
-        self.main_window.setGeometry(x, int(y), 400, 450)
+        self.main_window.setGeometry(x, int(y), 400, 475)
         self.main_window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         
         x = screen_rect.width() - window_rect.width()

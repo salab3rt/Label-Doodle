@@ -6,6 +6,7 @@ class PresetBCPrintTab(QWidget):
     print_signal = pyqtSignal()
     option_signal = pyqtSignal()
     conf_signal = pyqtSignal()
+    ortho_btn_signal = pyqtSignal()
 
     printer_name = None
     option_value = None
@@ -78,10 +79,12 @@ class PresetBCPrintTab(QWidget):
             {"text": "D100", "color": "#56855a"},
             {"text": "724", "color": "#486684"},
             {"text": "204", "color": "#c23232"},
-            {"text": "CONF", "color": "#a32e7e"},
+            {"text": "D1000", "color": "#56855a"},
             {"text": "003", "color": "#f2692e"},
             {"text": "725", "color": "#486684"},
             {"text": "726", "color": "#23b06f"},
+            {"text": "CONF", "color": "#a32e7e"},
+            {"text": "ORTHO", "color": "#a32e7e"},
         ]
 
         for i, data in enumerate(buttons_data):
@@ -117,6 +120,9 @@ class PresetBCPrintTab(QWidget):
         button = self.sender().button_name
         if button == 'CONF':
             self.conf_signal.emit()
+        if button == 'ORTHO':
+            self.option_value = ['D2', 'D4', 'D8', 'D16', 'D32', 'D64', 'D128', 'D256', 'D512', 'D1024']
+            self.ortho_btn_signal.emit()
         else:
             self.option_value = button
             
