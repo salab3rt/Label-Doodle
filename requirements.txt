@@ -3,3 +3,4 @@ zebra
 pystray
 PyQt6
 pyqtdarktheme
+keyboard

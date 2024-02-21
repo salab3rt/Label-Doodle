@@ -120,7 +120,7 @@ class PresetBCPrintTab(QWidget):
         button = self.sender().button_name
         if button == 'CONF':
             self.conf_signal.emit()
-        if button == 'ORTHO':
+        elif button == 'ORTHO':
             self.option_value = ['D2', 'D4', 'D8', 'D16', 'D32', 'D64', 'D128', 'D256', 'D512', 'D1024']
             self.ortho_btn_signal.emit()
         else:
