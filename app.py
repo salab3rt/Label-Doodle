@@ -59,9 +59,10 @@ FOOTER_HEIGHT = 10
 
 def generate_barcode(data):
     label = zpl.Label(25,50,8)
+    label.code+="^BY1"
     label.change_international_font(character_set=28)
 
-    label.field_orientation('N', '0')
+    label.field_orientation('N', '2')
     timestamp = datetime.now().strftime("%Y/%m/%d %H:%M")
     #print(timestamp)
     label.origin(2, 1)

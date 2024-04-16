@@ -28,18 +28,18 @@ class ZebraBarcodePrinter():
             '801': 'Urina Química',
             '841': 'Urina Química',
             '300': 'Plasma EDTA-Gel ',
-            '030': 'Saliva amostra 1',
-            '031': 'Saliva amostra 2',
-            '032': 'Saliva amostra 3',
-            '033': 'Saliva amostra 4',
-            '034': 'Saliva amostra 5',
-            '035': 'Saliva amostra 6',
-            '981': 'Prova PTGO',
-            '982': 'Prova PTGO',
-            '983': 'Prova PTGO',
-            '984': 'Prova PTGO',
-            '985': 'Prova PTGO',
-            '986': 'Prova PTGO',
+            '030': 'Saliva amostra 030',
+            '031': 'Saliva amostra 031',
+            '032': 'Saliva amostra 032',
+            '033': 'Saliva amostra 033',
+            '034': 'Saliva amostra 034',
+            '035': 'Saliva amostra 035',
+            '981': 'Prova PTGO 981',
+            '982': 'Prova PTGO 982',
+            '983': 'Prova PTGO 983',
+            '984': 'Prova PTGO 984',
+            '985': 'Prova PTGO 985',
+            '986': 'Prova PTGO 986',
             '050': 'Pós prandial',
             '091': 'Provas',
             '092': 'Provas',
@@ -79,6 +79,7 @@ class ZebraBarcodePrinter():
             'D512': 'Diluição 1/512',
             'D1000': 'Diluição 1/1000',
             'D1024': 'Diluição 1/1024',
+            '999': 'Genérico',
         }
     
     sorted_extensions_keys = sorted(tube_extensions.keys(), key=len, reverse=True)
@@ -88,11 +89,13 @@ class ZebraBarcodePrinter():
         
         self.z = Zebra()
 
-    def generate_barcode(self, data, prefix=False):
+    def generate_barcode(self, data, prefix=False, reduced_size=False):
         
         #print(data)
 
         self.label = zpl.Label(25,50,8)
+        if reduced_size:
+            self.label.code+="^BY1"
         
         self.label.change_international_font(character_set=28)
         self.label.field_orientation('N', '0')
