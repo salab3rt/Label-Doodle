@@ -109,9 +109,11 @@ class LabelApp(QMainWindow):
         #print(f'Data: {data}')
         selected_value = self.preset_bc_tab.option_value
         data = self.check_and_replace_extension(data, selected_value)
-                
         #print(f'altered:{data}')
         self.preset_bc_tab.data_entry.setText(data)
+        barcode = self.zebra_barcode_printer.generate_barcode(data)
+        self.zebra_barcode_printer.print_barcode(barcode)
+        self.history_list_tab.add_to_history(data)
         
     def check_and_replace_extension(self, data, selected_value):
         sorted_extensions = sorted(self.zebra_barcode_printer.tube_extensions.keys(), key=len, reverse=True)

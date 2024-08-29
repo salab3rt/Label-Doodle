@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QCheckBox
 from PyQt6.QtGui import QFont, QFontMetrics
 from PyQt6.QtCore import Qt, pyqtSignal
 
@@ -29,6 +29,19 @@ class QuickPrintTab(QWidget):
         self.data_entry.setStyleSheet("QLineEdit {padding: 5px; letter-spacing: 4px;}")
         self.layout.addWidget(self.data_entry)
         
+        self.footer = QLabel('"CTRL" duas vezes para abrir/fechar a app.')
+        font = QFont("Montserrat", 9, 500)
+        self.footer.setFont(font)
+        self.layout.addWidget(self.footer)
+        self.layout.addStretch(2)
+        
+        self.printer_name_info = QLabel('Selecionar impressora antes de iniciar')
+        self.printer_name_info.setWordWrap(True)
+        self.printer_name_info.setFont(QFont("Montserrat", 12, 500))
+        self.layout.addWidget(self.printer_name_info)
+        
+        self.layout.addStretch(3)
+        
         self.print_button = QPushButton("PRINT", self)
         font = QFont("Montserrat", 16, 800)
         self.print_button.setFont(font)
@@ -42,21 +55,19 @@ class QuickPrintTab(QWidget):
         #self.print_button.adjustSize()
         
         self.data_entry.returnPressed.connect(self.on_return_pressed)
-        self.layout.addWidget(self.print_button, alignment=Qt.AlignmentFlag.AlignRight)
-        
-        self.layout.addStretch(3)
-        
-        self.printer_name_info = QLabel('Selecionar impressora antes de iniciar')
-        self.printer_name_info.setWordWrap(True)
-        self.printer_name_info.setFont(QFont("Montserrat", 12, 500))
-        self.layout.addWidget(self.printer_name_info)
-        
-        self.layout.addStretch(3)
-        
-        self.footer = QLabel('"CTRL" duas vezes para abrir/fechar a app.')
-        font = QFont("Montserrat", 9, 500)
-        self.footer.setFont(font)
-        self.layout.addWidget(self.footer)
+        self.layout.addWidget(self.print_button, alignment=[Qt.AlignmentFlag.AlignRight, Qt.AlignmentFlag.AlignBottom])
+
+        self.check_reduced = QCheckBox("Cod. Reduzido", self)
+        self.check_reduced.setCheckState(Qt.CheckState.Unchecked)
+        self.check_reduced.setTristate(False)
+        font = QFont("Montserrat", 10, 400)
+        self.check_reduced.setFont(font)
+        self.check_reduced.setStyleSheet(" QCheckBox::indicator:checked { border: 2px solid; border-color: #fff; background: #c23232 } \
+                                            QCheckBox::indicator:unchecked { border: 2px solid; border-color: #fff; color: #fff; background: #fff; }")
+        self.check_reduced.setMaximumSize(150, 20)
+        self.check_reduced.setMinimumSize(150, 20)
+        self.check_reduced.stateChanged.connect(self.set_reduced)
+        self.layout.addWidget(self.check_reduced, alignment=Qt.AlignmentFlag.AlignBottom)
         
         
     def on_print_button_click(self):
@@ -71,3 +82,6 @@ class QuickPrintTab(QWidget):
         # Call the same method as clicking the button
         self.on_print_button_click()
         
+    def set_reduced(self, state):
+        self.check_reduced = state
+        print(self.check_reduced)

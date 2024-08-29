@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QGridLayout
+from PyQt6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QGridLayout, QCheckBox
 from PyQt6.QtGui import QFont, QFontMetrics
 from PyQt6.QtCore import Qt, pyqtSignal
 
@@ -10,6 +10,7 @@ class PresetBCPrintTab(QWidget):
 
     printer_name = None
     option_value = None
+    reduced_size = False
     
     def __init__(self):
         super().__init__()
@@ -115,6 +116,19 @@ class PresetBCPrintTab(QWidget):
         
         self.data_entry.returnPressed.connect(self.on_return_pressed)
         self.layout.addWidget(self.print_button, alignment=Qt.AlignmentFlag.AlignRight)
+
+        self.check_reduced = QCheckBox("Cod. Reduzido", self)
+        self.check_reduced.setCheckState(Qt.CheckState.Unchecked)
+        self.check_reduced.setTristate(False)
+        font = QFont("Montserrat", 10, 400)
+        self.check_reduced.setFont(font)
+        self.check_reduced.setStyleSheet(" QCheckBox::indicator:checked { border: 2px solid; border-color: #fff; background: #c23232 } \
+                                            QCheckBox::indicator:unchecked { border: 2px solid; border-color: #fff; color: #fff; background: #fff; }")
+        self.check_reduced.setMaximumSize(150, 20)
+        self.check_reduced.setMinimumSize(150, 20)
+        self.check_reduced.stateChanged.connect(self.set_reduced)
+
+        self.layout.addWidget(self.check_reduced, alignment=Qt.AlignmentFlag.AlignBottom)
     
     def on_button_clicked(self, index):
         button = self.sender().button_name
@@ -144,3 +158,7 @@ class PresetBCPrintTab(QWidget):
 
     def on_text_changed(self, text):
         self.data_entry.setText(text.upper())
+
+    def set_reduced(self, state):
+        self.check_reduced = state
+        print(self.check_reduced)
