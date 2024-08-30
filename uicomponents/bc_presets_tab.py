@@ -10,11 +10,11 @@ class PresetBCPrintTab(QWidget):
 
     printer_name = None
     option_value = None
-    reduced_size = False
     
     def __init__(self):
         super().__init__()
         self.init_ui()
+        self.reduced_size = False
         
     def init_ui(self):
         self.layout = QVBoxLayout(self)
@@ -35,6 +35,20 @@ class PresetBCPrintTab(QWidget):
         self.data_entry.setStyleSheet("QLineEdit {padding: 5px; letter-spacing: 4px;}")
         #self.data_entry.textChanged.connect(self.on_text_changed)
         self.layout.addWidget(self.data_entry)
+
+        self.print_button = QPushButton("PRINT", self)
+        font = QFont("Montserrat", 16, 800)
+        self.print_button.setFont(font)
+        self.print_button.setStyleSheet("background-color: #212121; color: white; letter-spacing: 2px;")
+        self.print_button.clicked.connect(self.on_print_button_click)
+        
+        fm = QFontMetrics(font)
+        text_width = fm.horizontalAdvance("PRINT")
+        self.print_button.setMinimumSize(text_width + 35, fm.height() + 16)
+        self.print_button.setMaximumSize(text_width + 35, fm.height() + 18)
+        
+        self.data_entry.returnPressed.connect(self.on_return_pressed)
+        self.layout.addWidget(self.print_button, alignment=Qt.AlignmentFlag.AlignRight)
         
         button_grid_widget = QWidget()
 
@@ -103,19 +117,7 @@ class PresetBCPrintTab(QWidget):
 
         self.layout.addWidget(button_grid_widget)
 
-        self.print_button = QPushButton("PRINT", self)
-        font = QFont("Montserrat", 16, 800)
-        self.print_button.setFont(font)
-        self.print_button.setStyleSheet("background-color: #212121; color: white; letter-spacing: 2px;")
-        self.print_button.clicked.connect(self.on_print_button_click)
-        
-        fm = QFontMetrics(font)
-        text_width = fm.horizontalAdvance("PRINT")
-        self.print_button.setMinimumSize(text_width + 35, fm.height() + 16)
-        self.print_button.setMaximumSize(text_width + 35, fm.height() + 18)
-        
-        self.data_entry.returnPressed.connect(self.on_return_pressed)
-        self.layout.addWidget(self.print_button, alignment=Qt.AlignmentFlag.AlignRight)
+        self.layout.addStretch(2)
 
         self.check_reduced = QCheckBox("Cod. Reduzido", self)
         self.check_reduced.setCheckState(Qt.CheckState.Unchecked)
@@ -160,5 +162,9 @@ class PresetBCPrintTab(QWidget):
         self.data_entry.setText(text.upper())
 
     def set_reduced(self, state):
-        self.check_reduced = state
-        print(self.check_reduced)
+        if state == 2:
+            self.reduced_size = True
+            self.data_entry.setFocus()
+        else:
+            self.reduced_size = False
+            self.data_entry.setFocus()

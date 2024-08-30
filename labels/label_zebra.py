@@ -20,13 +20,17 @@ class ZebraBarcodePrinter():
     tube_extensions = {
             '000': 'Soro',
             '003': 'Tratamento Eurosorb',
+            '009': 'Soro VET',
             '100': 'Sangue total EDTA',
             '101': 'Sangue total EDTA',
+            '109': 'Sangue tot EDTA VET',
             '110': 'Sangue total EDTA',
             '190': 'Plasma Citrato',
             '800': 'Urina II',
             '801': 'Urina Química',
             '841': 'Urina Química',
+            '809': 'Urina II VET',
+            '899': 'Urina Química VET',
             '300': 'Plasma EDTA-Gel ',
             '030': 'Saliva amostra 030',
             '031': 'Saliva amostra 031',
@@ -90,18 +94,17 @@ class ZebraBarcodePrinter():
         self.z = Zebra()
 
     def generate_barcode(self, data, prefix=False, reduced_size=False):
-        
-        #print(data)
-
         self.label = zpl.Label(25,50,8)
-        if reduced_size:
+        if reduced_size == True:
             self.label.code+="^BY1"
+        else:
+            self.label.code+="^BY2"
         
         self.label.change_international_font(character_set=28)
         self.label.field_orientation('N', '0')
         timestamp = datetime.now().strftime("%Y/%m/%d %H:%M")
         
-        self.label.origin(2, 1)
+        self.label.origin(2, 2.5)
         self.label.write_text(
             'CORELAB', 
             char_height=self._INFO_CHAR_SIZE,
@@ -111,7 +114,7 @@ class ZebraBarcodePrinter():
         )
         self.label.endorigin()
 
-        self.label.origin(4, 1)
+        self.label.origin(4, 2.5)
         self.label.write_text(
             timestamp, 
             char_height=self._INFO_CHAR_SIZE, 
@@ -121,7 +124,7 @@ class ZebraBarcodePrinter():
         )
         self.label.endorigin()
 
-        self.label.origin(4, 3.5)
+        self.label.origin(4, 5)
         self.label.barcode(
             'C', data, 
             height=self._CODE_HEIGHT, 
@@ -132,7 +135,7 @@ class ZebraBarcodePrinter():
             )
         self.label.endorigin()
 
-        self.label.origin(0, 17)
+        self.label.origin(0, 18.5)
         self.label.write_text(
             '^GB400,3,2', 
         )
@@ -151,7 +154,7 @@ class ZebraBarcodePrinter():
             data += self.extension
         #extension = data[len(data)-3:]
         #if extension in self.tube_extensions.keys():
-            self.label.origin(4, 18)
+            self.label.origin(4, 19.5)
             self.label.write_text(
                 data[:-len(extension)], 
                 char_height=5, 
@@ -161,7 +164,7 @@ class ZebraBarcodePrinter():
             )
             self.label.endorigin()
 
-            self.label.origin(4, 18)
+            self.label.origin(4, 19.5)
             self.label.write_text(
                 extension, 
                 char_height=3, 
@@ -171,7 +174,7 @@ class ZebraBarcodePrinter():
             )
             self.label.endorigin()
 
-            self.label.origin(2, 22.5)
+            self.label.origin(2, 24)
             self.label.write_text(
                 self.tube_extensions[extension], 
                 char_height=2, 
@@ -182,7 +185,7 @@ class ZebraBarcodePrinter():
             self.label.endorigin()
 
         else:
-            self.label.origin(4, 18)
+            self.label.origin(4, 19.5)
             self.label.write_text(
                 data, 
                 char_height=5, 
@@ -193,7 +196,7 @@ class ZebraBarcodePrinter():
             self.label.endorigin()
 
             if prefix:
-                self.label.origin(2, 22.5)
+                self.label.origin(2, 24)
                 self.label.write_text(
                     self.tube_prefixes[data[:2]], 
                     char_height=2, 

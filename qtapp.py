@@ -73,7 +73,7 @@ class LabelApp(QMainWindow):
         if data:
             for i in range(11, 15, 1):  #exclusive 11-14
                 conf_data = str(i) + data
-                barcode = self.zebra_barcode_printer.generate_barcode(conf_data, prefix=True)
+                barcode = self.zebra_barcode_printer.generate_barcode(conf_data, prefix=True, reduced_size=self.preset_bc_tab.reduced_size)
                 self.zebra_barcode_printer.print_barcode(barcode)
                 self.history_list_tab.add_to_history(conf_data)
 
@@ -82,7 +82,7 @@ class LabelApp(QMainWindow):
         if data:
             for ext in self.preset_bc_tab.option_value:
                 barcode = self.check_and_replace_extension(data, ext)
-                barcode = self.zebra_barcode_printer.generate_barcode(barcode)
+                barcode = self.zebra_barcode_printer.generate_barcode(barcode, reduced_size=self.preset_bc_tab.reduced_size)
                 self.zebra_barcode_printer.print_barcode(barcode)
 
             self.history_list_tab.add_to_history(data)
@@ -90,7 +90,7 @@ class LabelApp(QMainWindow):
     def print_and_add_to_history_list(self):
         data = self.quick_print_tab.data_entry.text()
         if data:
-            barcode = self.zebra_barcode_printer.generate_barcode(data)
+            barcode = self.zebra_barcode_printer.generate_barcode(data, reduced_size=self.quick_print_tab.reduced_size)
             self.zebra_barcode_printer.print_barcode(barcode)
             self.history_list_tab.add_to_history(data)
             
@@ -99,7 +99,7 @@ class LabelApp(QMainWindow):
         if data:
             self.preset_bc_tab.data_entry.setText(data)
             
-            barcode = self.zebra_barcode_printer.generate_barcode(data)
+            barcode = self.zebra_barcode_printer.generate_barcode(data, reduced_size=self.preset_bc_tab.reduced_size)
             self.zebra_barcode_printer.print_barcode(barcode)
             self.history_list_tab.add_to_history(data)
             #print(data)
@@ -111,7 +111,7 @@ class LabelApp(QMainWindow):
         data = self.check_and_replace_extension(data, selected_value)
         #print(f'altered:{data}')
         self.preset_bc_tab.data_entry.setText(data)
-        barcode = self.zebra_barcode_printer.generate_barcode(data)
+        barcode = self.zebra_barcode_printer.generate_barcode(data, reduced_size=self.preset_bc_tab.reduced_size)
         self.zebra_barcode_printer.print_barcode(barcode)
         self.history_list_tab.add_to_history(data)
         
